@@ -1,7 +1,7 @@
 #include "DRV8320S.h"
-#include "main.h"
-#include "stm32g4xx_hal.h"
-#include "spi.h"
+//#include "main.h"
+//#include "stm32g4xx_hal.h"
+//#include "spi.h"
 
 
 /** @brief: precalculated values for current config of gate drivers*/
@@ -9,17 +9,17 @@
 #define IDRIVEP	0xD //>0.527A
 
 /** @brief: a struct to save data of driver*/
-DRV_Struct drv_struct;
+DRV_Struct drv_struct={.funcList=&FuncList};
 
-/** @brief: function to set chip select*/
-static void DRV8320S_SetCS(void){
-	GPIOB->BSRR=DRV_CS_Pin<<16;
-}
+// /** @brief: function to set chip select*/
+// static void DRV8320S_SetCS(void){
+// 	GPIOB->BSRR=DRV_CS_Pin<<16;
+// }
 
-/** @brief: function to reset chip select*/
-static void DRV8320S_ResetCS(void){
-	GPIOB->BSRR=DRV_CS_Pin;
-}
+// /** @brief: function to reset chip select*/
+// static void DRV8320S_ResetCS(void){
+// 	GPIOB->BSRR=DRV_CS_Pin;
+// }
 
 /** @brief: initialization of regs */
 void DRV8320S_Init(void){

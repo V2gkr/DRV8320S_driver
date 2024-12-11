@@ -2,8 +2,9 @@
 #ifndef __DRV8320S_H
 #define __DRV8320S_H
 
-#include "stm32g4xx_hal.h"
+//#include "stm32g4xx_hal.h"
 #include "stdint.h"
+#include "BSP_DRV8320_STM32/BSP_DRV8320.h"
 
 #define DRV8320_ADDR_MASK 0x7800
 #define DRV8320_DATA_MASK 0x07FF
@@ -50,7 +51,7 @@ typedef struct{
 	ReadStatus RdStatus;
 	DRV8320SReg_Struct RegStruct;
 	uint16_t Rx_data;//its just one half word of data to store a read of status registers
-	
+	DRV8320Functions * funcList;
 }DRV_Struct;
 
 void DRV8320S_Init(void);

@@ -11,4 +11,5 @@ typedef struct{
     
 }DRV8320Functions;
 
+extern DRV8320Functions FuncList;
 #endif 
