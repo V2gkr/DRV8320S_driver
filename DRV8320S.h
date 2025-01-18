@@ -51,7 +51,7 @@ typedef struct{
 	ReadStatus RdStatus;
 	DRV8320SReg_Struct RegStruct;
 	uint16_t Rx_data;//its just one half word of data to store a read of status registers
-	DRV8320Functions * funcList;
+	const DRV8320Functions * const funcList;
 }DRV_Struct;
 
 void DRV8320S_Init(void);
