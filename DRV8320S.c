@@ -59,74 +59,70 @@ void DRV8320S_LockConfig(uint8_t state){
 
 /** @brief:that function is only to analyze content of received fault register */
 void DRV8320S_ReceiveCheck(void){
-    if(drv_struct.RdStatus==Fault_read_active){//a fault register may activate its read with fault pin too 
-      if(drv_struct.Rx_data&FAULT){  
-
-        if(drv_struct.Rx_data&OTSD){
-            //do something
-        }
-        if(drv_struct.Rx_data&UVLO){
-            //do something
-        }
-        if(drv_struct.Rx_data&GDF){
-            //do something
-        }
-        if(drv_struct.Rx_data&VDS_OCP){
-					if(drv_struct.Rx_data&VDS_LC){
-							//do something
-					}
-					if(drv_struct.Rx_data&VDS_HC){
-							//do something
-					}
-					if(drv_struct.Rx_data&VDS_LB){
-							//do something
-					}
-					if(drv_struct.Rx_data&VDS_HB){
-							//do something
-					}
-					if(drv_struct.Rx_data&VDS_LA){
-							//do something
-					}
-					if(drv_struct.Rx_data&VDS_HA){
-						 //do something
-					}
-        }
-
+  if(drv_struct.RdStatus==Fault_read_active){//a fault register may activate its read with fault pin too 
+    if(drv_struct.Rx_data&FAULT){
+      if(drv_struct.Rx_data&OTSD){
+        drv_struct.faultFuncList->OTSD_FaultProcess();
       }
-      drv_struct.RdStatus=Read_free;
+      if(drv_struct.Rx_data&UVLO){
+        drv_struct.faultFuncList->UVLO_FaultProcess();
+      }
+      if(drv_struct.Rx_data&GDF){
+        drv_struct.faultFuncList->GDF_FaultProcess();
+      }
+      if(drv_struct.Rx_data&VDS_OCP){
+        if(drv_struct.Rx_data&VDS_LC){
+            //do something
+        }
+        if(drv_struct.Rx_data&VDS_HC){
+            //do something
+        }
+        if(drv_struct.Rx_data&VDS_LB){
+            //do something
+        }
+        if(drv_struct.Rx_data&VDS_HB){
+            //do something
+        }
+        if(drv_struct.Rx_data&VDS_LA){
+            //do something
+        }
+        if(drv_struct.Rx_data&VDS_HA){
+          //do something
+        }
+      }
     }
-    if(drv_struct.RdStatus==Vgs_read_active){
-        if(drv_struct.Rx_data&VGS_LC){
-            //do something
-        }
-        if(drv_struct.Rx_data&VGS_HC){
-            //do something
-        }
-        if(drv_struct.Rx_data&VGS_LB){
-            //do something
-        }
-        if(drv_struct.Rx_data&VGS_HB){
-            //do something
-        }
-        if(drv_struct.Rx_data&VGS_LA){
-            //do something
-        }
-        if(drv_struct.Rx_data&VGS_HA){
-            //do something
-        }
-        if(drv_struct.Rx_data&CPUV){
-            //do something
-        }
-        if(drv_struct.Rx_data&OTW){
-            //do something
-        }
+    drv_struct.RdStatus=Read_free;
+  }
+  if(drv_struct.RdStatus==Vgs_read_active){
+    if(drv_struct.Rx_data&VGS_LC){
+        //do something
+    }
+    if(drv_struct.Rx_data&VGS_HC){
+        //do something
+    }
+    if(drv_struct.Rx_data&VGS_LB){
+        //do something
+    }
+    if(drv_struct.Rx_data&VGS_HB){
+        //do something
+    }
+    if(drv_struct.Rx_data&VGS_LA){
+        //do something
+    }
+    if(drv_struct.Rx_data&VGS_HA){
+        //do something
+    }
+    if(drv_struct.Rx_data&CPUV){
+        //do something
+    }
+    if(drv_struct.Rx_data&OTW){
+        //do something
+    }
 
-        drv_struct.RdStatus=Read_free;
-    }
+    drv_struct.RdStatus=Read_free;
+  }
 
 }
-
-
 
 /** @brief:probably useless for now */
 void DRV8320_ShutDown(void){

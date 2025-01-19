@@ -9,7 +9,7 @@
 #define DRV8320_ADDR_MASK 0x7800
 #define DRV8320_DATA_MASK 0x07FF
 #define DRV8320_RW_MASK   0x8000
-#define DRV_OFFSET 11//сдвиг влево адреса регистра , к которому идет запись
+#define DRV_OFFSET 11//offset of address in register map
 
 //DRV8320S SPI Register Map
 #define DRV8320S_FAULT_STATUS_1 		0x00<<DRV_OFFSET
@@ -24,6 +24,15 @@
 #define GATE_LOCK_OFFSET 	 8
 //this struct will be used to activate and to switch between different registers to analyze
 
+/** @brief struct with function for processing faults */
+typedef struct {
+  void (*OTSD_FaultProcess)(void);
+  void (*UVLO_FaultProcess)(void);
+  void (*GDF_FaultProcess)(void);
+  void (*VDS_OCP_FaultProcess)(void);
+  void (*CPUV_FaultProcess)(void);
+  void (*OTW_FaultProcess)(void);
+}FaultStatusFunctions;
 
 
 typedef enum{
@@ -33,11 +42,12 @@ typedef enum{
 }ReadStatus;
 
 typedef enum{
-	FaultNone=0,		//система работает как обычно	
-	FaultDetected=1,//прервать работу до выяснения
-	FaultProcessed=2//выяснения ошибки
+	FaultNone=0,		
+	FaultDetected=1,
+	FaultProcessed=2
 }FaultStatus;
 
+/** @brief: drv8320 register struct */
 typedef struct{
 	uint16_t FAULT_Reg;
 	uint16_t VGS_Reg;
@@ -52,14 +62,16 @@ typedef struct{
 	DRV8320SReg_Struct RegStruct;
 	uint16_t Rx_data;//its just one half word of data to store a read of status registers
 	const DRV8320Functions * const funcList;
+  const FaultStatusFunctions * const faultFuncList;
 }DRV_Struct;
 
+/** @brief: initialization of peripheral and drv8320s module */
 void DRV8320S_Init(void);
+/** @brief: function to lock config of drive registers */
 void DRV8320S_LockConfig(uint8_t state);
 void DRV8320S_clearFault(void);
 void DRV8320S_SetENABLE(uint8_t state);
-void DRV8320S_Write_reg(uint16_t addr,uint16_t reg);
-uint16_t DRV8320S_Read_reg(uint16_t addr);
+
 void DRV8320S_GetFaultStatus(void);
 void DRV8320S_GetVgsStatus(void);
 uint8_t DRV8320_CheckRxStatus(void);

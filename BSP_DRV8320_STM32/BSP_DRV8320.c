@@ -35,4 +35,4 @@ uint16_t BSP_Receive(uint16_t addr){
 
 DRV8320Functions FuncList={.Receive=&BSP_Receive
                             ,.Transmit=&BSP_Transmit
-							,.Ctor=&BSP_Ctor};
+                            ,.Ctor=&BSP_Ctor};
