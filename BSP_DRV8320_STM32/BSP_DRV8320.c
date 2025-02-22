@@ -15,7 +15,7 @@ void BSP_Transmit(uint16_t addr,uint16_t reg){
   __BSP_SET_CS;
   uint16_t data = (addr)|(reg&DRV8320_DATA_MASK);
   SPI1->DR=data;
-  while(!(SPI1->SR&SPI_SR_TXE));
+  //while(!(SPI1->SR&SPI_SR_TXE));/** useless command ,since spi has 4 byte buf */
   while(SPI1->SR&SPI_SR_BSY);
   if(SPI1->SR&SPI_SR_RXNE){
     uint16_t dummy=SPI1->DR;
@@ -27,7 +27,7 @@ uint16_t BSP_Receive(uint16_t addr){
   __BSP_SET_CS;
   uint16_t data= (addr)|0x8000;
   SPI1->DR=data;
-  while(!(SPI1->SR&SPI_SR_RXNE));
+  //while(!(SPI1->SR&SPI_SR_RXNE));/** useless , since bsy flag will turn off with rxne turn on */
   while(SPI1->SR&SPI_SR_BSY);
   __BSP_RESET_CS;
   return SPI1->DR;
