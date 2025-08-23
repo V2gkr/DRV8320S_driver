@@ -18,7 +18,7 @@ void BSP_Transmit(uint16_t addr,uint16_t reg){
   //while(!(SPI1->SR&SPI_SR_TXE));/** useless command ,since spi has 4 byte buf */
   while(SPI1->SR&SPI_SR_BSY);
   if(SPI1->SR&SPI_SR_RXNE){
-    uint16_t dummy=SPI1->DR;
+    data=SPI1->DR;
   }
   __BSP_RESET_CS;
 }

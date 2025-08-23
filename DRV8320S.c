@@ -3,7 +3,7 @@
 
 #include "DRV8320S.h"
 #ifdef STM32G474xx
-#include "BSP_DRV8320_STM32/BSP_DRV8320.h"
+#include "BSP_stm32g4_cmsis/BSP_DRV8320.h"
 #endif
 
 /** @brief: a struct to save data of driver*/

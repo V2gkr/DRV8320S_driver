@@ -4,7 +4,7 @@
 
 //#include "stm32g4xx_hal.h"
 #include "stdint.h"
-#include "BSP_DRV8320_STM32/BSP_DRV8320.h"
+#include "BSP_stm32g4_cmsis/BSP_DRV8320.h"
 
 #define DRV8320_ADDR_MASK 0x7800
 #define DRV8320_DATA_MASK 0x07FF
