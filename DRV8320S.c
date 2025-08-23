@@ -1,10 +1,10 @@
-
+/** @author VH
+ *  @brief driver for drv8320s 
+ */
 
 
 #include "DRV8320S.h"
-#ifdef STM32G474xx
-#include "BSP_stm32g4_cmsis/BSP_DRV8320.h"
-#endif
+#include "BSP_DRV8320.h"
 
 /** @brief: a struct to save data of driver*/
 DRV_Struct drv_struct={.funcList=&FuncList};
@@ -12,49 +12,45 @@ DRV_Struct drv_struct={.funcList=&FuncList};
 
 /** @brief: initialization of regs */
 void DRV8320S_Init(void){
-	//while(!(FAULT_GPIO_Port->IDR&FAULT_Pin));
-	drv_struct.RegStruct.DRV_CTRL_Reg=0;
-	drv_struct.funcList->Ctor();
-	drv_struct.funcList->Transmit(DRV8320S_GATE_DRV_HS_1,drv_struct.RegStruct.GDHS_Reg);
-	//DRV8320S_Write_reg();
-	
-	
-	DRV8320S_LockConfig(0);
-	drv_struct.RegStruct.GDHS_Reg|=(IDRIVEP<<GATE_P_OFFSET)|IDRIVEN;
-	drv_struct.funcList->Transmit(DRV8320S_GATE_DRV_HS_1,drv_struct.RegStruct.GDHS_Reg);
-	
-	drv_struct.RegStruct.GDLS_Reg|=(3<<GATE_LOCK_OFFSET)|(IDRIVEP<<GATE_P_OFFSET)|IDRIVEN;
-	drv_struct.funcList->Transmit(DRV8320S_GATE_DRV_LS_1,drv_struct.RegStruct.GDLS_Reg);
-	
-	DRV8320S_LockConfig(1);
-	
-	//ocp mode 00b (vds latching)
-	drv_struct.RegStruct.OCP_Control_Reg=DT_1|DT_0;
-	drv_struct.funcList->Transmit(DRV8320S_OCP_CTRL_1,drv_struct.RegStruct.OCP_Control_Reg);
+  drv_struct.RegStruct.DRV_CTRL_Reg=0;
+  drv_struct.funcList->Ctor();
+  drv_struct.funcList->Transmit(DRV8320S_GATE_DRV_HS_1,drv_struct.RegStruct.GDHS_Reg);
+
+  DRV8320S_LockConfig(0);
+  drv_struct.RegStruct.GDHS_Reg|=(IDRIVEP<<GATE_P_OFFSET)|IDRIVEN;
+  drv_struct.funcList->Transmit(DRV8320S_GATE_DRV_HS_1,drv_struct.RegStruct.GDHS_Reg);
+
+  drv_struct.RegStruct.GDLS_Reg|=(3<<GATE_LOCK_OFFSET)|(IDRIVEP<<GATE_P_OFFSET)|IDRIVEN;
+  drv_struct.funcList->Transmit(DRV8320S_GATE_DRV_LS_1,drv_struct.RegStruct.GDLS_Reg);
+  DRV8320S_LockConfig(1);
+
+  //ocp mode 00b (vds latching)
+  drv_struct.RegStruct.OCP_Control_Reg=DT_1|DT_0;
+  drv_struct.funcList->Transmit(DRV8320S_OCP_CTRL_1,drv_struct.RegStruct.OCP_Control_Reg);
 }
 
 
 
-/** @brief:get status from both status registers*/
+/** get status from both status registers*/
 void DRV8320S_GetStatus(void){
-	drv_struct.RegStruct.FAULT_Reg=drv_struct.funcList->Receive(DRV8320S_FAULT_STATUS_1);
-	drv_struct.RegStruct.VGS_Reg=drv_struct.funcList->Receive(DRV8320S_VGS_STATUS_1);
+  drv_struct.RegStruct.FAULT_Reg=drv_struct.funcList->Receive(DRV8320S_FAULT_STATUS_1);
+  drv_struct.RegStruct.VGS_Reg=drv_struct.funcList->Receive(DRV8320S_VGS_STATUS_1);
 }
 
-/** @brief: clearing fault of registers */
+/** clearing fault of registers */
 void DRV8320S_clearFault(void){
-	drv_struct.funcList->Transmit(DRV8320S_DRV_CTRL_1,drv_struct.RegStruct.DRV_CTRL_Reg&(~CLR_FLT));
+  drv_struct.funcList->Transmit(DRV8320S_DRV_CTRL_1,drv_struct.RegStruct.DRV_CTRL_Reg&(~CLR_FLT));
 }
 
-/** @brief:locking a configuration of a driver registers */
+/** locking a configuration of a driver registers */
 void DRV8320S_LockConfig(uint8_t state){
-	if(state){
-		drv_struct.RegStruct.GDHS_Reg|=(6<<GATE_LOCK_OFFSET);
-	}
-	else{
-		drv_struct.RegStruct.GDHS_Reg|=(3<<GATE_LOCK_OFFSET);
-	}
-	drv_struct.funcList->Transmit(DRV8320S_GATE_DRV_HS_1,drv_struct.RegStruct.GDHS_Reg);
+  if(state){
+    drv_struct.RegStruct.GDHS_Reg|=(6<<GATE_LOCK_OFFSET);
+  }
+  else{
+    drv_struct.RegStruct.GDHS_Reg|=(3<<GATE_LOCK_OFFSET);
+  }
+  drv_struct.funcList->Transmit(DRV8320S_GATE_DRV_HS_1,drv_struct.RegStruct.GDHS_Reg);
 }
 
 /** @brief:that function is only to analyze content of received fault register */
@@ -71,24 +67,7 @@ void DRV8320S_ReceiveCheck(void){
         drv_struct.faultFuncList->GDF_FaultProcess();
       }
       if(drv_struct.Rx_data&VDS_OCP){
-        if(drv_struct.Rx_data&VDS_LC){
-            //do something
-        }
-        if(drv_struct.Rx_data&VDS_HC){
-            //do something
-        }
-        if(drv_struct.Rx_data&VDS_LB){
-            //do something
-        }
-        if(drv_struct.Rx_data&VDS_HB){
-            //do something
-        }
-        if(drv_struct.Rx_data&VDS_LA){
-            //do something
-        }
-        if(drv_struct.Rx_data&VDS_HA){
-          //do something
-        }
+        drv_struct.faultFuncList->VDS_OCP_FaultProcess();
       }
     }
     drv_struct.RdStatus=Read_free;
@@ -113,10 +92,10 @@ void DRV8320S_ReceiveCheck(void){
         //do something
     }
     if(drv_struct.Rx_data&CPUV){
-        //do something
+        drv_struct.faultFuncList->CPUV_FaultProcess();
     }
     if(drv_struct.Rx_data&OTW){
-        //do something
+        drv_struct.faultFuncList->OTW_FaultProcess();
     }
 
     drv_struct.RdStatus=Read_free;
@@ -127,5 +106,9 @@ void DRV8320S_ReceiveCheck(void){
 /** @brief:probably useless for now */
 void DRV8320_ShutDown(void){
   __BSP_RESET_ENABLE;
+}
+
+void DRV8320_FaultCallback(void){
+
 }
 	
