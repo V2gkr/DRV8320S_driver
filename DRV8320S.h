@@ -110,6 +110,8 @@ typedef struct{
   const FaultStatusFunctions * const faultFuncList;
 }DRV_Struct;
 
+
+
 /** @brief initialization of peripheral and drv8320s module */
 void DRV8320S_Init(void);
 
@@ -135,7 +137,7 @@ void DRV8320S_GetStatus(void);
 
 void DRV8320_FaultCallback(void);
 
-
+uint8_t DRV8320_IsFaultDetected(void);
 
 
 #endif

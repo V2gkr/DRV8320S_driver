@@ -8,13 +8,15 @@
 
 /** @brief: a struct to save data of driver*/
 DRV_Struct drv_struct={.funcList=&FuncList};
-
-
+volatile FaultStatus drvFaultStatus=FaultNone;
+static uint16_t check;
 /** @brief: initialization of regs */
 void DRV8320S_Init(void){
+  __BSP_SET_ENABLE;
   drv_struct.RegStruct.DRV_CTRL_Reg=0;
   drv_struct.funcList->Ctor();
   drv_struct.funcList->Transmit(DRV8320S_GATE_DRV_HS_1,drv_struct.RegStruct.GDHS_Reg);
+
 
   DRV8320S_LockConfig(0);
   drv_struct.RegStruct.GDHS_Reg|=(IDRIVEP<<GATE_P_OFFSET)|IDRIVEN;
@@ -27,6 +29,7 @@ void DRV8320S_Init(void){
   //ocp mode 00b (vds latching)
   drv_struct.RegStruct.OCP_Control_Reg=DT_1|DT_0;
   drv_struct.funcList->Transmit(DRV8320S_OCP_CTRL_1,drv_struct.RegStruct.OCP_Control_Reg);
+  check=drv_struct.funcList->Receive(DRV8320S_OCP_CTRL_1);
 }
 
 
@@ -40,6 +43,7 @@ void DRV8320S_GetStatus(void){
 /** clearing fault of registers */
 void DRV8320S_clearFault(void){
   drv_struct.funcList->Transmit(DRV8320S_DRV_CTRL_1,drv_struct.RegStruct.DRV_CTRL_Reg&(~CLR_FLT));
+  drvFaultStatus=FaultNone;
 }
 
 /** locking a configuration of a driver registers */
@@ -109,6 +113,15 @@ void DRV8320_ShutDown(void){
 }
 
 void DRV8320_FaultCallback(void){
+  drvFaultStatus=FaultDetected;
+}
 
+uint8_t DRV8320_IsFaultDetected(void){
+  if(drvFaultStatus==FaultDetected){
+    return 1;
+  }
+  else{
+    return 0;
+  }
 }
 	
