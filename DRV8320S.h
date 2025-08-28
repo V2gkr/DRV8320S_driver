@@ -140,4 +140,9 @@ void DRV8320_FaultCallback(void);
 uint8_t DRV8320_IsFaultDetected(void);
 
 
+void DRV8320_SetEnable(void);
+
+/** @brief:probably useless for now */
+void DRV8320_ResetEnable(void);
+
 #endif

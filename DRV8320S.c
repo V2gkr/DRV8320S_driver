@@ -12,7 +12,6 @@ volatile FaultStatus drvFaultStatus=FaultNone;
 static uint16_t check;
 /** @brief: initialization of regs */
 void DRV8320S_Init(void){
-  __BSP_SET_ENABLE;
   drv_struct.RegStruct.DRV_CTRL_Reg=0;
   drv_struct.funcList->Ctor();
   drv_struct.funcList->Transmit(DRV8320S_GATE_DRV_HS_1,drv_struct.RegStruct.GDHS_Reg);
@@ -107,8 +106,12 @@ void DRV8320S_ReceiveCheck(void){
 
 }
 
+void DRV8320_SetEnable(void){
+  __BSP_SET_ENABLE;
+}
+
 /** @brief:probably useless for now */
-void DRV8320_ShutDown(void){
+void DRV8320_ResetEnable(void){
   __BSP_RESET_ENABLE;
 }
 
