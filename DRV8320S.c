@@ -26,7 +26,7 @@ void DRV8320S_Init(void){
   DRV8320S_LockConfig(1);
 
   //ocp mode 00b (vds latching)
-  drv_struct.RegStruct.OCP_Control_Reg=DT_1|DT_0;
+  drv_struct.RegStruct.OCP_Control_Reg=DT_0;
   drv_struct.funcList->Transmit(DRV8320S_OCP_CTRL_1,drv_struct.RegStruct.OCP_Control_Reg);
   check=drv_struct.funcList->Receive(DRV8320S_OCP_CTRL_1);
 }
